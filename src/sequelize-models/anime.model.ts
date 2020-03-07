@@ -2,7 +2,9 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript'
 
 @Table({
     tableName: 'Anime',
-    timestamps: false
+    timestamps: false,
+    charset: 'utf8mb4',
+    collate: 'utf8mb4_general_ci'
 })
 export default class Anime extends Model<Anime> {
 

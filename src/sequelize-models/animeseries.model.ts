@@ -3,7 +3,9 @@ import Anime from './anime.model'
 
 @Table({
     tableName: 'AnimeSeries',
-    timestamps: false
+    timestamps: false,
+    charset: 'utf8mb4',
+    collate: 'utf8mb4_general_ci'
 })
 export default class AnimeSeries extends Model<AnimeSeries> {
 
