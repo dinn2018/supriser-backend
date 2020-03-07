@@ -14,11 +14,11 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV == "dev") {
     });
 } else {
     sequelize = new Sequelize({
-        database: 'supriser',
+        database: process.env.DBNAME,
         dialect: 'mysql',
-        host: '127.0.0.1',
-        username: 'root',
-        password: 'vechain@faucet!',
+        host: process.env.DBHOST,
+        username: process.env.DBUSER,
+        password: process.env.DBPASS,
         models: [Anime, AnimeSeries,]
     });
 }
