@@ -5,18 +5,20 @@ const basePath = path.resolve(__dirname, "../../logs");
 let log4 = configure({
     appenders: {
         info: {
-            type: "dateFile",
+            type: 'fileSync',
             filename: basePath + '/supriser-info',
+            maxLogSize: 2 * 1000 * 1000,
             alwaysIncludePattern: true,
             pattern: "yyyy-MM-dd.log",
-            daysToKeep: 10
+            daysToKeep: 7
         },
         error: {
-            type: 'dateFile',
+            type: 'fileSync',
             filename: basePath + '/supriser-error',
+            maxLogSize: 2 * 1000 * 1000,
             alwaysIncludePattern: true,
             pattern: "yyyy-MM-dd.log",
-            daysToKeep: 10
+            daysToKeep: 7
         }
     },
     categories: {

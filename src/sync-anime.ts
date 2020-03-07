@@ -46,10 +46,6 @@ async function syncAll() {
             for (let href of hrefs) {
                 let data = await request({
                     encoding: "binary",
-                    headers: {
-                        'User-Agent': 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36',
-                        'Accept-Language': 'zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7',
-                    },
                     method: "GET",
                     uri: href,
                     json: false,
@@ -90,9 +86,9 @@ async function syncAll() {
                 $('table tbody tr:nth-child(1) td:nth-child(1) div img').each((_, elem) => {
                     anime.poster = elem.attribs['src'];
                 });
-                console.log(`download image ${anime.name}`);
+                logger.info(`download image ${anime.name}`);
                 anime.poster = await downloadImage(anime.poster, anime.name)
-                console.log('downloaded');
+                logger.info('downloaded');
                 //upsert anime
                 let myAnime = await Anime.findOne({ where: { name: anime.name } })
                 if (myAnime) {
@@ -101,7 +97,7 @@ async function syncAll() {
                 } else {
                     anime = await Anime.create(anime);
                 }
-                console.log('anime inserted', anime.id, anime.name);
+                logger.info('anime inserted', anime.id, anime.name);
                 let animeSeries: any[] = [];
                 $('table tbody tr:nth-child(3) td:nth-child(1) table tbody tr td a').each((_, elem) => {
                     let src = elem.firstChild.data;
@@ -142,7 +138,6 @@ async function downloadAnimeListHTML(root: string, page: number) {
 async function downloadImage(url: string, imageName: string): Promise<string> {
     if (imageName.indexOf('/') != -1) {
         imageName = imageName.replace(new RegExp(/\//g), ' ');
-        console.log(imageName);
     }
     let dir = path.join(__dirname, '../static/images', `/${imageName}`);
     if (!fs.existsSync(dir)) {

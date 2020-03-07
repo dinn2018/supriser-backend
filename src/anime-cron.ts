@@ -11,19 +11,18 @@ import { downloadAnimeListHTML, downloadImage } from './sync-anime';
 import { sequelize } from './sequelize-models';
 sequelize.sync();
 
-let sched = later.parse.text('every 10 minutes');
+let sched = later.parse.text('every 6 hours');
 later.setInterval(sync2DaysAnimes, sched);
 
 async function sync2DaysAnimes() {
     let currentPage = 0;
     let now = Date.now();
-    let failedTimes = 0;
     try {
         await mkdirp(path.join(__dirname, '../static/images'));
         //parse anime list
         let root = 'http://www.kuyunzy1.com'
         let updateTime = now;
-        while (now - updateTime < 3 * 24 * 3600 * 1000 + failedTimes * 1 * 60 * 1000) {
+        while (now - updateTime < 2 * 24 * 3600 * 1000) {
             let data = await downloadAnimeListHTML(root, currentPage);
             let html = Iconv.decode(Buffer.from(data, 'binary'), 'gbk');
             let $ = cheerio.load(html);
@@ -37,10 +36,6 @@ async function sync2DaysAnimes() {
             for (let href of hrefs) {
                 let data = await request({
                     encoding: "binary",
-                    headers: {
-                        'User-Agent': 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36',
-                        'Accept-Language': 'zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7',
-                    },
                     method: "GET",
                     uri: href,
                     json: false,
@@ -81,9 +76,9 @@ async function sync2DaysAnimes() {
                 $('table tbody tr:nth-child(1) td:nth-child(1) div img').each((_, elem) => {
                     anime.poster = elem.attribs['src'];
                 });
-                console.log(`download image ${anime.name}`);
+                logger.info(`download image ${anime.name}`);
                 anime.poster = await downloadImage(anime.poster, anime.name)
-                console.log('downloaded');
+                logger.info('image downloaded');
                 //upsert anime
                 let myAnime = await Anime.findOne({ where: { name: anime.name } })
                 if (myAnime) {
@@ -92,7 +87,7 @@ async function sync2DaysAnimes() {
                 } else {
                     anime = await Anime.create(anime);
                 }
-                console.log('anime inserted', anime.id, anime.name);
+                logger.info('anime inserted', anime.id, anime.name);
                 //parse series
                 let animeSeries: any[] = [];
                 $('table tbody tr:nth-child(3) td:nth-child(1) table tbody tr td a').each((_, elem) => {
@@ -115,8 +110,6 @@ async function sync2DaysAnimes() {
             currentPage++;
         }
     } catch (e) {
-        logger.error('sync all failed', e);
-        failedTimes++;
-        await sync2DaysAnimes();
+        logger.error('cron sync failed', e);
     }
 }
