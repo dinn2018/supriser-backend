@@ -141,7 +141,7 @@ async function downloadAnimeListHTML(root: string, page: number) {
 
 async function downloadImage(url: string, imageName: string): Promise<string> {
     if (imageName.indexOf('/') != -1) {
-        imageName = imageName.replace(new RegExp(/\//g), '-');
+        imageName = imageName.replace(new RegExp(/\//g), ' ');
         console.log(imageName);
     }
     let dir = path.join(__dirname, '../static/images', `/${imageName}`);
