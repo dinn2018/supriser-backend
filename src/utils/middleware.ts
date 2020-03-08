@@ -6,6 +6,11 @@ import { logger } from './logger'
 let httpErrorMiddleware = async (ctx: Koa.ParameterizedContext<any, {}>, next: () => Promise<any>) => {
     try {
         await next()
+        logger.info(`
+from: ${ctx.request.ip}
+request: ${ctx.request.url}
+`);
+
     } catch (err) {
         if (err instanceof HttpError) {
             ctx.status = err.statusCode

@@ -13,7 +13,6 @@ const convert = require('koa-convert');
 sequelize.sync();
 const app = new Koa();
 app.proxy = process.env.REVERSE_PROXY === 'yes' ? true : false
-
 if (!process.env.NODE_ENV || process.env.NODE_ENV == "dev") {
     app.use(serve(path.join(__dirname, '../static/images')));
     app.use(mount('/static/images', app));

@@ -4,12 +4,12 @@ import Validator from '../utils/validator'
 
 var router = new Router();
 
-router.get("/animes/count", async (ctx) => {
-    let count = await AnimeService.count()
+router.get("/animes/categories", async (ctx) => {
+    let data = await AnimeService.animeCategories();
     ctx.body = {
-        data: count,
+        data
     };
-})
+});
 
 router.get("/animes/:id", async (ctx) => {
     let id = ctx.params.id;
@@ -20,37 +20,44 @@ router.get("/animes/:id", async (ctx) => {
     };
 });
 
-router.get("/animes", async (ctx) => {
-    let page_size = ctx.request.query.page_size;
-    Validator.validateParameter(page_size, 'page_size')
-    let page_num = ctx.request.query.page_num
-    Validator.validateParameter(page_num, 'page_num')
+router.post("/animes", async (ctx) => {
+    let pageSize = ctx.request.query.pageSize;
+    Validator.validateParameter(pageSize, 'pageSize')
+    let pageNum = ctx.request.query.pageNum
+    Validator.validateParameter(pageNum, 'pageNum')
     let keyword = ctx.request.query.keyword;
-    let animes = await AnimeService.list(parseInt(page_size), parseInt(page_num), keyword);
+    let postYears = ctx.request.body.postYears;
+    let regions = ctx.request.body.regions;
+    let data = await AnimeService.list(parseInt(pageSize), parseInt(pageNum), keyword, postYears, regions);
     ctx.body = {
-        data: animes,
+        data
     };
 });
 
 
-router.get("/animes/:anime_id/series", async (ctx) => {
-    let anime_id = ctx.params.anime_id;
-    Validator.validateParameter(anime_id, 'anime_id')
+router.get("/animes/:animeID/series", async (ctx) => {
+    let animeID = ctx.params.animeID;
+    Validator.validateParameter(animeID, 'animeID')
+    let pageSize = ctx.request.query.pageSize;
+    Validator.validateParameter(pageSize, 'pageSize')
+    let pageNum = ctx.request.query.pageNum
+    Validator.validateParameter(pageNum, 'pageNum')
     let order = ctx.request.query.order
-    let series = await AnimeService.seriesList(anime_id, order)
+    let data = await AnimeService.seriesList(parseInt(pageSize), parseInt(pageNum), parseInt(animeID), order == 0)
+    ctx.body = {
+        data
+    };
+})
+
+
+router.get("/animes/series/:seriesID", async (ctx) => {
+    let seriesID = ctx.params.seriesID;
+    Validator.validateParameter(seriesID, 'seriesID')
+    let series = await AnimeService.series(seriesID)
     ctx.body = {
         data: series,
     };
 })
 
-
-router.get("/animes/series/:series_id", async (ctx) => {
-    let series_id = ctx.params.series_id;
-    Validator.validateParameter(series_id, 'series_id')
-    let series = await AnimeService.series(series_id)
-    ctx.body = {
-        data: series,
-    };
-})
 
 export default router;
