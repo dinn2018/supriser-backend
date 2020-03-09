@@ -16,12 +16,16 @@ sync2DaysAnimes();
 
 later.setInterval(sync2DaysAnimes, sched);
 async function sync2DaysAnimes() {
+    let current = [0, 0];
+    let currentIndex = 0;
     try {
         await mkdirp(path.join(__dirname, '../static/images'));
         let categoryNums = ['31', '39'];
         //parse anime list
-        for (let categoryNum of categoryNums) {
-            let currentPage = 0;
+        for (let index of categoryNums.keys()) {
+            currentIndex = index;
+            let categoryNum = categoryNums[index];
+            let currentPage = current[index];
             let now = Date.now();
             let root = 'http://www.kuyunzy1.com'
             let updateTime = now;
@@ -117,7 +121,12 @@ async function sync2DaysAnimes() {
             }
         }
     } catch (e) {
+        if (!current[currentIndex]) {
+            current[currentIndex]--;
+        }
         logger.error('cron sync failed', e);
+        //resync
+        sync2DaysAnimes();
     }
 }
 

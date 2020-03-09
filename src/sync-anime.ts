@@ -10,12 +10,17 @@ import AnimeSeries from './sequelize-models/animeseries.model'
 import { sequelize } from './sequelize-models';
 sequelize.sync();
 syncAll();
+
 async function syncAll() {
+    let current = [0, 0];
+    let currentIndex = 0;
     try {
         let categoryNums = ['31', '39'];
         await mkdirp(path.join(__dirname, '../static/images'));
-        for (let categoryNum of categoryNums) {
-            let currentPage = 0;
+        for (let index of categoryNums.keys()) {
+            currentIndex = index;
+            let categoryNum = categoryNums[index];
+            let currentPage = current[index];
             //parse anime list
             let totalPages = 0;
             let root = 'http://www.kuyunzy1.com'
@@ -122,9 +127,11 @@ async function syncAll() {
                 currentPage++;
             }
         }
-
     } catch (e) {
         logger.error('sync all failed', e);
+        if (!current[currentIndex]) {
+            current[currentIndex]--;
+        }
         //resync
         await syncAll();
     }
