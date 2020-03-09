@@ -18,7 +18,7 @@ async function genSiteMap() {
         for (let series of seriesList) {
             head += `
   <url>
-    <lastmod>2020-03-09</lastmod>
+    <lastmod>2020-03-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <loc>http://exanime.tv/#/animes/${anime.id}/series/${series.id}?pageNum=1&amp;orderUp=false</loc>
