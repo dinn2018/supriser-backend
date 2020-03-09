@@ -103,9 +103,11 @@ async function syncAll() {
                     $('table tbody tr:nth-child(3) td:nth-child(1) table tbody tr td a').each((_, elem) => {
                         let src = elem.firstChild.data;
                         if (src.endsWith('m3u8')) {
-                            let srcs = src.split('$');
+                            let srcs = src.split('.m3u8');
+                            let f = srcs[0];
+                            let u = f.split('//');
                             let number = srcs[0].substring(1, srcs[0].length - 1);
-                            let url = srcs[1];
+                            let url = `http://${u[1]}.m3u8`;
                             animeSeries.push({
                                 url,
                                 num: parseInt(number),

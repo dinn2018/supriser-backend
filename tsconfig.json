@@ -16,6 +16,6 @@
         }
     },
     "include": [
-        "src/**/*", "sitemapGenerators/generateVideoSitemap.ts"
+        "src/**/*", "sitemapGenerators/generateRecentVideoSitemap.ts"
     ]
 }
