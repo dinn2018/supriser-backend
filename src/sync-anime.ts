@@ -10,7 +10,6 @@ import AnimeSeries from './sequelize-models/animeseries.model'
 import { sequelize } from './sequelize-models';
 sequelize.sync();
 syncAll();
-
 async function syncAll() {
     try {
         let categoryNums = ['31', '39'];
@@ -90,7 +89,7 @@ async function syncAll() {
                     });
                     logger.info(`download image ${anime.name}`);
                     anime.poster = await downloadImage(anime.poster, anime.name)
-                    logger.info('downloaded');
+                    logger.info('image downloaded');
                     //upsert anime
                     let myAnime = await Anime.findOne({ where: { name: anime.name } })
                     if (myAnime) {
@@ -153,5 +152,3 @@ async function downloadImage(url: string, imageName: string): Promise<string> {
     }
     return `/static/images/${imageName}`;
 };
-
-export { downloadAnimeListHTML, downloadImage }

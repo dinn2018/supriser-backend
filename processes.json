@@ -1,7 +1,7 @@
 {
     "apps": [{
             "script": "dist/server.js",
-            "instances": "1",
+            "instances": "2",
             "exec_mode": "cluster"
         },
         {

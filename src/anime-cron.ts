@@ -2,18 +2,19 @@ import * as request from 'request-promise'
 import * as cheerio from 'cheerio';
 import * as Iconv from 'iconv-lite';
 import * as later from 'later'
+import * as fs from 'fs';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
 import { logger } from './utils/logger'
 import Anime from './sequelize-models/anime.model'
 import AnimeSeries from './sequelize-models/animeseries.model'
-import { downloadAnimeListHTML, downloadImage } from './sync-anime';
 import { sequelize } from './sequelize-models';
 sequelize.sync();
 
 let sched = later.parse.text('every 6 hours');
-later.setInterval(sync2DaysAnimes, sched);
+sync2DaysAnimes();
 
+later.setInterval(sync2DaysAnimes, sched);
 async function sync2DaysAnimes() {
     try {
         await mkdirp(path.join(__dirname, '../static/images'));
@@ -81,6 +82,7 @@ async function sync2DaysAnimes() {
                     logger.info(`download image ${anime.name}`);
                     anime.poster = await downloadImage(anime.poster, anime.name)
                     logger.info('image downloaded');
+                    logger.info(anime.name, new Date(anime.updateTime), categoryNum);
                     //upsert anime
                     let myAnime = await Anime.findOne({ where: { name: anime.name } })
                     if (myAnime) {
@@ -112,8 +114,32 @@ async function sync2DaysAnimes() {
                 currentPage++;
             }
         }
-
     } catch (e) {
         logger.error('cron sync failed', e);
     }
 }
+
+async function downloadAnimeListHTML(categoryNum: string, root: string, page: number) {
+    let url = root + `/list/?${categoryNum}${page ? `-${page + 1}` : ''}.html`;
+    return await request({
+        method: "GET",
+        encoding: "binary",
+        uri: url,
+        json: false,
+    })
+}
+
+async function downloadImage(url: string, imageName: string): Promise<string> {
+    if (imageName.indexOf('/') != -1) {
+        imageName = imageName.replace(new RegExp(/\//g), ' ');
+    }
+    let dir = path.join(__dirname, '../static/images', `/${imageName}`);
+    if (!fs.existsSync(dir)) {
+        request({
+            method: "GET",
+            uri: url,
+            json: false,
+        }).pipe(fs.createWriteStream(dir));
+    }
+    return `/static/images/${imageName}`;
+};
