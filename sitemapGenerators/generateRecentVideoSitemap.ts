@@ -10,7 +10,8 @@ genSiteMap();
 async function genSiteMap() {
   let updateDate = '2020-03-12';
   let head = `<?xml version="1.0" encoding="UTF-8" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">`
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+`
   let tail = `</urlset>`
   let animes = await Anime.findAll({ where: { [Op.or]: [{ region: '日本' }, { region: '大陆' },] } });
   for (let anime of animes) {
@@ -23,7 +24,7 @@ async function genSiteMap() {
     <lastmod>${updateDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-    <loc>http://exanime.tv/#/animes/${anime.id}/series/${maxSeries.id}?pageNum=1&orderUp=false</loc>
+    <loc>http://exanime.tv/#/animes/${anime.id}/series/${maxSeries.id}</loc>
       <video:video>
         <video:thumbnail_loc>http://exanime.tv${anime.poster}</video:thumbnail_loc>
           <video:title>Grilling steaks for summer</video:title>
