@@ -8,6 +8,11 @@
             "script": "dist/anime-cron.js",
             "instances": "1",
             "exec_mode": "fork"
+        },
+        {
+            "script": "dist/cartoon-cron.js",
+            "instances": "1",
+            "exec_mode": "fork"
         }
     ]
 }

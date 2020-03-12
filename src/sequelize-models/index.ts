@@ -1,6 +1,9 @@
 import { Sequelize } from 'sequelize-typescript';
 import AnimeSeries from './animeseries.model';
 import Anime from './anime.model';
+import Cartoon from './cartoon.model';
+import CartoonNum from './cartoonnum.model';
+import CartoonSeries from './cartoonseries.model';
 
 let sequelize: Sequelize;
 if (!process.env.NODE_ENV || process.env.NODE_ENV == "dev") {
@@ -10,7 +13,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV == "dev") {
         host: 'localhost',
         username: 'root',
         password: '123456qwe',
-        models: [Anime, AnimeSeries,]
+        models: [Anime, AnimeSeries, Cartoon, CartoonNum, CartoonSeries]
     });
 } else {
     sequelize = new Sequelize({
@@ -19,7 +22,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV == "dev") {
         host: process.env.DBHOST,
         username: process.env.DBUSER,
         password: process.env.DBPASS,
-        models: [Anime, AnimeSeries,]
+        models: [Anime, AnimeSeries, Cartoon, CartoonNum, CartoonSeries]
     });
 }
 
