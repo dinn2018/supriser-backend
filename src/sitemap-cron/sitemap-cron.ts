@@ -2,25 +2,47 @@ import * as path from 'path';
 import * as later from 'later'
 import { Op } from "sequelize";
 import { sequelize } from '../sequelize-models';
+import { exec } from 'child_process';
 import { writeFile } from '../utils/utils'
 import Anime from '../sequelize-models/anime.model'
 import AnimeSeries from '../sequelize-models/animeseries.model'
 sequelize.sync();
 
-// let sched = later.parse.text('every 1 week');
-// later.setInterval(genVideosSiteMap, sched);
+let daySched = later.parse.text('every 1 day');
+later.setInterval(dayWork, daySched);
 
-// let recentVideoSched = later.parse.text('every 1 day');
-// later.setInterval(genRecentVideoSiteMap, recentVideoSched);
+let weekSched = later.parse.text('every 1 week');
+later.setInterval(weekWork, weekSched);
 
-// let animeInfoSched = later.parse.text('every 1 week');
-// later.setInterval(genAnimeInfoSiteMap, animeInfoSched);
+async function dayWork() {
+  await genRecentVideoSiteMap();
+  await genAnimeSeriesSiteMap();
+  await genAnimeSeriesSiteMap();
+  await nginxReload();
+}
 
-// let animeSeriesSched = later.parse.text('every 1 day');
-// later.setInterval(genAnimeSeriesSiteMap, animeSeriesSched);
+async function weekWork() {
+  await genAnimeInfoSiteMap();
+  await genBaseSitemap();
+  await nginxReload();
+}
 
-// let baseSched = later.parse.text('every 1 week');
-// later.setInterval(genBaseSitemap, baseSched);
+async function nginxReload() {
+  let cmd = `nginx -s reload`;
+  console.log('cmd ', cmd);
+  return await new Promise((resolve, reject) => {
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        reject(error.message)
+      }
+      if (stderr) {
+        reject(stderr);
+      }
+      resolve(stdout);
+    });
+  })
+}
+
 genSitemap();
 async function genSitemap() {
   await genAnimeInfoSiteMap();
@@ -28,7 +50,7 @@ async function genSitemap() {
   await genAnimeSeriesSiteMap();
   await genRecentVideoSiteMap();
   await genBaseSitemap();
-
+  await nginxReload();
 }
 async function genAnimeSeriesSiteMap() {
   let updateDate = currentDate();
@@ -40,7 +62,7 @@ async function genAnimeSeriesSiteMap() {
   for (let anime of animes) {
     let seriesList = await AnimeSeries.findAll({ where: { animeID: anime.id } });
     for (let series of seriesList) {
-      head += `<url>
+      head += `  <url>
     <loc>http://exanime.tv/#/animes/${anime.id}/series/${series.id}</loc>
     <lastmod>${updateDate}</lastmod>
     <priority>0.8</priority>
@@ -51,7 +73,6 @@ async function genAnimeSeriesSiteMap() {
   }
   head += tail;
   let filePath = path.join(__dirname, '../../../supriser/dist/sitemap.animeSeries.xml');
-  console.log('filePath', filePath);
   await writeFile(filePath, head)
   filePath = path.join(__dirname, '../../../supriser/public/sitemap.animeSeries.xml');
   await writeFile(filePath, head)
@@ -65,7 +86,7 @@ async function genAnimeInfoSiteMap() {
   let tail = `</urlset>`
   let animes = await Anime.findAll({ where: { [Op.or]: [{ region: '日本' }, { region: '大陆' },] } });
   for (let anime of animes) {
-    head += `<url>
+    head += `  <url>
     <loc>http://exanime.tv/#/animes/${anime.id}</loc>
     <lastmod>${updateDate}</lastmod>
     <priority>0.8</priority>
@@ -84,8 +105,8 @@ async function genAnimeInfoSiteMap() {
 async function genRecentVideoSiteMap() {
   let updateDate = currentDate();
   let head = `<?xml version="1.0" encoding="UTF-8" ?>
-  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-  `
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+`
   let tail = `</urlset>`
   let animes = await Anime.findAll({ where: { [Op.or]: [{ region: '日本' }, { region: '大陆' },] } });
   for (let anime of animes) {
@@ -154,6 +175,7 @@ async function genVideosSiteMap() {
   let filePath = path.join(__dirname, '../../../supriser/dist/sitemap.video.xml');
   await writeFile(filePath, head);
   filePath = path.join(__dirname, '../../../supriser/public/sitemap.video.xml');
+  console.log(filePath);
   await writeFile(filePath, head);
 }
 
