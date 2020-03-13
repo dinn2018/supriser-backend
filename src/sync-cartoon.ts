@@ -47,7 +47,7 @@ async function syncAll() {
             cartoonNums.push({ href, name });
         })
         for (let cartoonNum of cartoonNums) {
-            if (syncStart || cartoonNum.name.indexOf('967') != -1) {
+            if (syncStart || cartoonNum.name.indexOf('963') != -1) {
                 syncStart = true;
             } else {
                 continue;
