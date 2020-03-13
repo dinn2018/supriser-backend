@@ -104,6 +104,7 @@ async function syncAll() {
                         let f = srcs[0];
                         let u = f.split('//');
                         let number = srcs[0].substring(1, srcs[0].length - 1);
+                        number = number.split('集')[0];
                         let url = `http://${u[1]}.m3u8`;
                         animeSeries.push({
                             url,

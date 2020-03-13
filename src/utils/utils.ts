@@ -23,10 +23,11 @@ async function retry(func: Function, ...args: any[]): Promise<any> {
     }
 }
 
-async function downloadHTML(href: string) {
+async function downloadHTML(href: string, encoding: string = 'binary') {
     return request({
         method: "GET",
         uri: href,
+        encoding: encoding,
         json: false,
     })
 }

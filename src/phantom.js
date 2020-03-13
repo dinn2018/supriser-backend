@@ -1,5 +1,5 @@
 var page = require('webpage').create();
-page.open('https://manhua.fzdm.com/2/962/index_12.html', function (status) {
+page.open('https://manhua.fzdm.com/2/959/index_4.html', function (status) {
     if (status == 'success') {
         page.loadFinished(status);
         phantom.exit();

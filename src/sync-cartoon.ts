@@ -16,7 +16,7 @@ async function syncAll() {
     await mkdirp(path.join(__dirname, '../static/images'));
     await mkdirp(path.join(__dirname, '../static/cartoons'));
     let root = 'https://manhua.fzdm.com/'
-    let data = await retry(downloadHTML, root);
+    let data = await retry(downloadHTML, root, 'utf-8');
     let $ = cheerio.load(data);
     let cartoons: any[] = []
     $('div.pure-g div#mhmain ul div.round li a').each((_, elem) => {
@@ -32,7 +32,7 @@ async function syncAll() {
     for (let cartoon of cartoons) {
         let cartoonHref = cartoon.href;
         await retry(downloadImage, cartoon.poster, path.join(__dirname, `../static/images/${cartoon.name}`));
-        let indexData = await retry(downloadHTML, cartoon.href);
+        let indexData = await retry(downloadHTML, cartoon.href, 'utf-8');
         $ = cheerio.load(indexData);
         let cartoonNums: any[] = [];
         let c = await Cartoon.findOne({ where: { name: cartoon.name } });
@@ -47,7 +47,7 @@ async function syncAll() {
             cartoonNums.push({ href, name });
         })
         for (let cartoonNum of cartoonNums) {
-            if (syncStart || cartoonNum.name.indexOf('963') != -1) {
+            if (syncStart || cartoonNum.name.indexOf('961') != -1) {
                 syncStart = true;
             } else {
                 continue;
