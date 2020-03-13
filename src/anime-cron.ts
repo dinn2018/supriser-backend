@@ -108,7 +108,10 @@ async function sync2DaysAnimes() {
                     }
                 });
                 for (let series of animeSeries) {
-                    await AnimeSeries.upsert(series);
+                    let s = await AnimeSeries.findOne({ where: { url: series.url } });
+                    if (!s) {
+                        await AnimeSeries.create(series);
+                    }
                 }
             }
             currentPage++;
