@@ -47,7 +47,7 @@ async function syncAll() {
             cartoonNums.push({ href, name });
         })
         for (let cartoonNum of cartoonNums) {
-            if (syncStart || cartoonNum.name.indexOf('829') != -1) {
+            if (syncStart || cartoonNum.name.indexOf('967') != -1) {
                 syncStart = true;
             } else {
                 continue;
@@ -64,13 +64,14 @@ async function syncAll() {
     }
 }
 
-
 async function downloadPages(href: string, originRef: string, cartoonName: string, cartoonNum: CartoonNum) {
     let data = await loadHTML(href);
     let $ = cheerio.load(data);
     let page: string;
     $('a.button-success').each((_, elem) => {
         page = elem.firstChild.data;
+        page = page.slice(1, page.length - 1)
+        console.log('page: ', page)
     })
     let imgPath = path.join(__dirname, `../static/cartoons/${cartoonName}/${cartoonNum.name}`);
     let imgSrc = path.join(imgPath, page);
