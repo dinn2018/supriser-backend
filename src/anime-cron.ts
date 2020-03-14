@@ -42,6 +42,14 @@ async function sync2DaysAnimes() {
                 let data = await retry(downloadHTML, href);
                 let $ = cheerio.load(Iconv.decode(Buffer.from(data, 'binary'), 'gbk'));
                 let anime: any = {};
+                let updateTimec = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(7) td:nth-child(1) strong').text();
+                if (updateTimec == '更新时间：') {
+                    let updateTime = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(7) td:nth-child(1) font').text()
+                    anime.updateTime = Date.parse(updateTime)
+                    animeUpdateTime = anime.updateTime;
+                    logger.info(now, animeUpdateTime, now - animeUpdateTime);
+                    if (now - animeUpdateTime >= 2 * 24 * 3600 * 1000) break;
+                }
                 let namec = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(1) td:nth-child(1) strong').text();
                 if (namec == '影片名称：') {
                     anime.name = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(1) td:nth-child(1) font').text()
@@ -54,12 +62,7 @@ async function sync2DaysAnimes() {
                 if (regionc == '影片地区：') {
                     anime.region = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(6) td:nth-child(1) font').text()
                 }
-                let updateTimec = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(7) td:nth-child(1) strong').text();
-                if (updateTimec == '更新时间：') {
-                    let updateTime = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(7) td:nth-child(1) font').text()
-                    anime.updateTime = Date.parse(updateTime)
-                    animeUpdateTime = anime.updateTime;
-                }
+
                 let statusc = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(8) td:nth-child(1) strong').text();
                 if (statusc == '影片状态：') {
                     anime.status = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(8) td:nth-child(1) font').text()
