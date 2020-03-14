@@ -26,8 +26,8 @@ async function sync2DaysAnimes() {
         let currentPage = 0;
         let now = Date.now();
         let root = 'http://www.kuyunzy1.com'
-        let updateTime = now;
-        while (now - updateTime < 2 * 24 * 3600 * 1000) {
+        let animeUpdateTime = now;
+        while (now - animeUpdateTime < 2 * 24 * 3600 * 1000) {
             let data = await retry(downloadAnimeListHTML, categoryNum, root, currentPage);
             let html = Iconv.decode(Buffer.from(data, 'binary'), 'gbk');
             let $ = cheerio.load(html);
@@ -58,6 +58,7 @@ async function sync2DaysAnimes() {
                 if (updateTimec == '更新时间：') {
                     let updateTime = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(7) td:nth-child(1) font').text()
                     anime.updateTime = Date.parse(updateTime)
+                    animeUpdateTime = anime.updateTime;
                 }
                 let statusc = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(8) td:nth-child(1) strong').text();
                 if (statusc == '影片状态：') {
