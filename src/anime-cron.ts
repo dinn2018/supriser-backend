@@ -12,7 +12,7 @@ import Anime from './sequelize-models/anime.model'
 import AnimeSeries from './sequelize-models/animeseries.model'
 sequelize.sync();
 
-let sched = later.parse.text('every 6 hours');
+let sched = later.parse.text('every 1 hours');
 retry(sync2DaysAnimes);
 
 later.setInterval(sync2DaysAnimes, sched);
