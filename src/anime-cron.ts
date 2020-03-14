@@ -89,7 +89,7 @@ async function sync2DaysAnimes() {
                 } else {
                     anime = await Anime.create(anime);
                 }
-                logger.info('anime inserted', anime.id, anime.name);
+                logger.info('anime inserted', anime.id, anime.name, new Date(anime.updateTime));
                 //parse series
                 let animeSeries: any[] = [];
                 $('table tbody tr:nth-child(3) td:nth-child(1) table tbody tr td a').each((_, elem) => {
