@@ -30,7 +30,7 @@ async function weekWork() {
 
 async function nginxReload() {
   let cmd = `nginx -s reload`;
-  console.log('cmd ', cmd);
+  logger.info('cmd ', cmd);
   return await new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
       if (error) {
@@ -129,27 +129,12 @@ async function genRecentVideoSiteMap() {
       <changefreq>daily</changefreq>
     </url>
 `;
-      //       head += `  <url>
-      //     <lastmod>${updateDate}</lastmod>
-      //     <changefreq>weekly</changefreq>
-      //     <priority>0.7</priority>
-      //     <loc>http://exanime.tv/#/animes/${anime.id}/series/${maxSeries.id}</loc>
-      //     <video:video>
-      //       <video:thumbnail_loc>http://exanime.tv${anime.poster}</video:thumbnail_loc>
-      //       <video:title>Grilling steaks for summer</video:title>
-      //       <video:description>${anime.name} 第${maxSeries.num}集</video:description>
-      //       <video:player_loc>${maxSeries.url}</video:player_loc>
-      //       <video:publication_date>${new Date(anime.updateTime).toISOString()}</video:publication_date>
-      //       <video:family_friendly>no</video:family_friendly>
-      //     </video:video>
-      //   </url>
-      // `
     }
   }
   head += tail;
-  let filePath = path.join(__dirname, '../../../supriser/dist/sitemap.video.recent.xml');
+  let filePath = path.join(__dirname, '../../../supriser/dist/sitemap.home.xml');
   await writeFile(filePath, head);
-  filePath = path.join(__dirname, '../../../supriser/public/sitemap.video.recent.xml');
+  filePath = path.join(__dirname, '../../../supriser/public/sitemap.home.xml');
   await writeFile(filePath, head);
 }
 
@@ -193,20 +178,6 @@ async function genVideosSiteMap() {
 }
 
 async function genBaseSitemap() {
-  let updateDate = currentDate();
-  let homeSitemap = `<?xml version="1.0" encoding="UTF-8" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>http://exanime.tv</loc>
-    <lastmod>${updateDate}</lastmod>
-    <priority>1.0</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-</urlset>`
-  let filePath = path.join(__dirname, '../../../supriser/dist/sitemap.home.xml');
-  await writeFile(filePath, homeSitemap);
-  filePath = path.join(__dirname, '../../../supriser/public/sitemap.home.xml');
-  await writeFile(filePath, homeSitemap);
   let baseSitemap = `<?xml version="1.0" encoding="UTF-8" ?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
@@ -217,9 +188,6 @@ async function genBaseSitemap() {
   </sitemap>
   <sitemap>
     <loc>http://exanime.tv/sitemap.animeSeries.xml</loc>
-  </sitemap>
-  <sitemap>
-    <loc>http://exanime.tv/sitemap.video.recent.xml</loc>
   </sitemap>
   <sitemap>
     <loc>http://exanime.tv/sitemap.video.xml</loc>
