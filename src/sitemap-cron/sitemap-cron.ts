@@ -6,6 +6,7 @@ import { exec } from 'child_process';
 import { writeFile } from '../utils/utils'
 import Anime from '../sequelize-models/anime.model'
 import AnimeSeries from '../sequelize-models/animeseries.model'
+import { logger } from '../utils/logger';
 sequelize.sync();
 
 let daySched = later.parse.text('every 1 day');
@@ -105,7 +106,13 @@ async function genAnimeInfoSiteMap() {
 async function genRecentVideoSiteMap() {
   let updateDate = currentDate();
   let head = `<?xml version="1.0" encoding="UTF-8" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://exanime.tv</loc>
+    <lastmod>${updateDate}</lastmod>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+  </url>
 `
   let tail = `</urlset>`
   let animes = await Anime.findAll({ where: { [Op.or]: [{ region: '日本' }, { region: '大陆' },] } });
@@ -114,24 +121,30 @@ async function genRecentVideoSiteMap() {
     anime.name = anime.name.replace(new RegExp(/\&/g), '&amp;');
     anime.poster = anime.poster.replace(new RegExp(/\&/g), '&amp;');
     if (maxSeries) {
-      console.log('maxSeries: ', anime.name, maxSeries.num)
+      logger.info('maxSeries: ', anime.name, maxSeries.num)
       head += `  <url>
-    <lastmod>${updateDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <loc>http://exanime.tv/#/animes/${anime.id}/series/${maxSeries.id}</loc>
-    <video:video>
-      <video:thumbnail_loc>http://exanime.tv${anime.poster}</video:thumbnail_loc>
-      <video:title>Grilling steaks for summer</video:title>
-      <video:description>${anime.name} 第${maxSeries.num}集</video:description>
-      <video:player_loc>${maxSeries.url}</video:player_loc>
-      <video:publication_date>${new Date(anime.updateTime).toISOString()}</video:publication_date>
-      <video:family_friendly>no</video:family_friendly>
-    </video:video>
-  </url>
-`
+      <loc>http://exanime.tv/#/animes/${anime.id}/series/${maxSeries.id}</loc>
+      <lastmod>${updateDate}</lastmod>
+      <priority>0.9</priority>
+      <changefreq>daily</changefreq>
+    </url>
+`;
+      //       head += `  <url>
+      //     <lastmod>${updateDate}</lastmod>
+      //     <changefreq>weekly</changefreq>
+      //     <priority>0.7</priority>
+      //     <loc>http://exanime.tv/#/animes/${anime.id}/series/${maxSeries.id}</loc>
+      //     <video:video>
+      //       <video:thumbnail_loc>http://exanime.tv${anime.poster}</video:thumbnail_loc>
+      //       <video:title>Grilling steaks for summer</video:title>
+      //       <video:description>${anime.name} 第${maxSeries.num}集</video:description>
+      //       <video:player_loc>${maxSeries.url}</video:player_loc>
+      //       <video:publication_date>${new Date(anime.updateTime).toISOString()}</video:publication_date>
+      //       <video:family_friendly>no</video:family_friendly>
+      //     </video:video>
+      //   </url>
+      // `
     }
-
   }
   head += tail;
   let filePath = path.join(__dirname, '../../../supriser/dist/sitemap.video.recent.xml');
