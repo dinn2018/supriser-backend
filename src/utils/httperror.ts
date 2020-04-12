@@ -14,6 +14,7 @@ class HttpError extends Error {
 enum HttpStatusCode {
     BadRequest = 400,
     Forbidden = 403,
+    NotFound = 404,
     InternalError = 500
 }
 

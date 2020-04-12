@@ -9,7 +9,7 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript'
 export default class Anime extends Model<Anime> {
 
     @Column({
-        type: DataType.INTEGER({ length: 20 }),
+        type: DataType.INTEGER({ length: 32 }),
         primaryKey: true,
         autoIncrement: true,
     }) id: number
@@ -32,6 +32,10 @@ export default class Anime extends Model<Anime> {
     }) poster: string
 
     @Column({
+        type: DataType.STRING(100),
+    }) hdPoster: string
+
+    @Column({
         type: DataType.INTEGER({ length: 12 }),
     }) postYear: number
 
@@ -44,12 +48,31 @@ export default class Anime extends Model<Anime> {
     }) lang: string
 
     @Column({
-        type: DataType.STRING(10000),
+        type: DataType.STRING(1000),
     }) description: string
 
     @Column({
         type: DataType.DOUBLE,
     }) updateTime: number
 
+    @Column({
+        type: DataType.INTEGER({ length: 1 }),
+    }) isRecommended: number
 
+
+    @Column({
+        type: DataType.INTEGER({ length: 1 }),
+    }) isForbidden: number
+
+    @Column({
+        type: DataType.INTEGER({ length: 64 }),
+    }) totalScore: number
+
+    @Column({
+        type: DataType.INTEGER({ length: 64 }),
+    }) scoreCount: number
+
+    @Column({
+        type: DataType.INTEGER({ length: 2 }),
+    }) score: number
 }

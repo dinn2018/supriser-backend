@@ -9,7 +9,7 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript'
 export default class Cartoon extends Model<Cartoon> {
 
     @Column({
-        type: DataType.INTEGER({ length: 20 }),
+        type: DataType.INTEGER({ length: 32 }),
         primaryKey: true,
         autoIncrement: true,
     }) id: number

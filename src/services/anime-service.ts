@@ -38,6 +38,20 @@ export default class AnimeService {
     }
 
 
+    static async recommends() {
+        let whereOptions = { isRecommended: 1 }
+        let animes = await Anime.findAll(
+            {
+                limit: 4,
+                offset: 0,
+                where: whereOptions,
+                order: [['updateTime', 'desc',]],
+            }
+        )
+        let count = await Anime.count({ where: whereOptions, })
+        return { data: animes, count };
+    }
+
     static async get(id: number): Promise<Anime> {
         return Anime.findOne({ where: { id } });
     }

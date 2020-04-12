@@ -15,7 +15,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV == "dev") {
         host: 'localhost',
         username: 'root',
         password: '123456qwe',
-        models: [Anime, AnimeSeries, Cartoon, CartoonNum, CartoonSeries,]
+        models: [Anime, AnimeSeries, Cartoon, CartoonNum, CartoonSeries, User, Comment]
     });
 } else {
     sequelize = new Sequelize({
@@ -24,7 +24,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV == "dev") {
         host: process.env.DBHOST,
         username: process.env.DBUSER,
         password: process.env.DBPASS,
-        models: [Anime, AnimeSeries, Cartoon, CartoonNum, CartoonSeries]
+        models: [Anime, AnimeSeries, Cartoon, CartoonNum, CartoonSeries, User, Comment]
     });
 }
 

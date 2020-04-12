@@ -1,8 +1,15 @@
 import * as Router from 'koa-router';
-import AnimeService from './anime-service'
+import AnimeService from '../services/anime-service'
 import Validator from '../utils/validator'
 
-var router = new Router();
+const router = new Router();
+
+router.get("/app/animes/recommends", async (ctx) => {
+    let data = await AnimeService.recommends();
+    ctx.body = {
+        data
+    };
+});
 
 router.get("/animes/categories", async (ctx) => {
     let data = await AnimeService.animeCategories();
@@ -34,7 +41,6 @@ router.post("/animes", async (ctx) => {
     };
 });
 
-
 router.get("/animes/:animeID/series", async (ctx) => {
     let animeID = ctx.params.animeID;
     Validator.validateParameter(animeID, 'animeID')
@@ -49,7 +55,6 @@ router.get("/animes/:animeID/series", async (ctx) => {
     };
 })
 
-
 router.get("/animes/series/:seriesID", async (ctx) => {
     let seriesID = ctx.params.seriesID;
     Validator.validateParameter(seriesID, 'seriesID')
@@ -60,4 +65,5 @@ router.get("/animes/series/:seriesID", async (ctx) => {
 })
 
 
-export default router;
+
+export = router;

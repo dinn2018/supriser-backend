@@ -5,9 +5,9 @@ import * as cors from 'koa-cors'
 import * as serve from 'koa-static';
 import * as mount from 'koa-mount';
 import * as path from 'path';
-import router from './controllers/router';
+import { registerRouter } from './router';
 import { logger } from './utils/logger'
-import { httpErrorMiddleware } from './utils/middleware';
+import { httpErrorMiddleware, userMiddleware } from './utils/middleware';
 const convert = require('koa-convert');
 
 sequelize.sync();
@@ -22,9 +22,9 @@ app.use(convert(bodyParser()))
     .use(convert(cors({
         origin: process.env.SUPRISER_CORS || "*"
     })))
+    .use(userMiddleware)
     .use(httpErrorMiddleware)
-    .use(router.routes())
-    .use(router.allowedMethods());
+    .use(registerRouter());
 
 
 const port = process.env.SUPRISER_PORT || 3000

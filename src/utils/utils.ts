@@ -1,6 +1,12 @@
 import * as fs from 'fs';
-import * as request from 'request-promise'
+import * as request from 'request-promise';
+import * as crypto from 'crypto';
 import { logger } from './logger';
+
+function hash(str: string) {
+    return crypto.createHash('md5').update(str).digest().toString('hex');
+}
+
 async function writeFile(path: string, data: string) {
     await new Promise((resolve, reject) => {
         fs.writeFile(path, data, (err) => {
@@ -19,7 +25,7 @@ async function retry(func: Function, ...args: any[]): Promise<any> {
         return result;
     } catch (e) {
         logger.error('retry', func.name, e);
-        await func.apply(func, args);
+        return func.apply(func, args);
     }
 }
 
@@ -32,4 +38,4 @@ async function downloadHTML(href: string, encoding: string = 'binary') {
     })
 }
 
-export { writeFile, retry, downloadHTML }
+export { writeFile, retry, downloadHTML, hash }

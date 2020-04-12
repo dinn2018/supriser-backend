@@ -9,7 +9,7 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript'
 export default class User extends Model<User> {
 
     @Column({
-        type: DataType.INTEGER({ length: 20 }),
+        type: DataType.INTEGER({ length: 32 }),
         primaryKey: true,
         autoIncrement: true,
     }) id: number
@@ -24,8 +24,13 @@ export default class User extends Model<User> {
     }) passHash: string
 
     @Column({
+        type: DataType.STRING(100),
+        unique: { name: 'email', msg: 'email' }
+    }) email: string
+
+    @Column({
         type: DataType.DOUBLE,
     }) updateTime: number
-    
+
 
 }

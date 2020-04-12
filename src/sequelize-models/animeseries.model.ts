@@ -10,7 +10,7 @@ import Anime from './anime.model'
 export default class AnimeSeries extends Model<AnimeSeries> {
 
     @Column({
-        type: DataType.INTEGER({ length: 20 }),
+        type: DataType.INTEGER({ length: 32 }),
         primaryKey: true,
         autoIncrement: true,
     }) id: number
@@ -25,7 +25,11 @@ export default class AnimeSeries extends Model<AnimeSeries> {
     }) num: number
 
     @Column({
-        type: DataType.INTEGER({ length: 20 }),
+        type: DataType.INTEGER({ length: 1 }),
+    }) onlyVIP: number
+
+    @Column({
+        type: DataType.INTEGER({ length: 32 }),
         references: { model: Anime, key: 'id' }
     }) animeID: number
 

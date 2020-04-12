@@ -10,7 +10,7 @@ import Cartoon from './cartoon.model'
 export default class CartoonNum extends Model<CartoonNum> {
 
     @Column({
-        type: DataType.INTEGER({ length: 20 }),
+        type: DataType.INTEGER({ length: 32 }),
         primaryKey: true,
         autoIncrement: true,
     }) id: number
@@ -21,7 +21,7 @@ export default class CartoonNum extends Model<CartoonNum> {
     }) name: string
 
     @Column({
-        type: DataType.INTEGER({ length: 20 }),
+        type: DataType.INTEGER({ length: 32 }),
         references: { model: Cartoon, key: 'id' }
     }) cartoonoID: number
 

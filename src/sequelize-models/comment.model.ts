@@ -12,13 +12,13 @@ import CartoonSeries from './cartoonseries.model'
 export default class Comment extends Model<Comment> {
 
     @Column({
-        type: DataType.INTEGER({ length: 20 }),
+        type: DataType.INTEGER({ length: 32 }),
         primaryKey: true,
         autoIncrement: true,
     }) id: number
 
     @Column({
-        type: DataType.INTEGER({ length: 20 }),
+        type: DataType.INTEGER({ length: 32 }),
         references: { model: User, key: 'id' }
     }) userID: number
 
@@ -28,12 +28,12 @@ export default class Comment extends Model<Comment> {
     }) content: string
 
     @Column({
-        type: DataType.INTEGER({ length: 20 }),
+        type: DataType.INTEGER({ length: 32 }),
         references: { model: CartoonSeries, key: 'id' }
     }) cartoonSeriesID: number
 
     @Column({
-        type: DataType.INTEGER({ length: 20 }),
+        type: DataType.INTEGER({ length: 32 }),
         references: { model: AnimeSeries, key: 'id' }
     }) animeSeriesID: number
 
