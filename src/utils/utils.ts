@@ -1,7 +1,7 @@
 import * as fs from 'fs';
-import * as request from 'request-promise';
 import * as crypto from 'crypto';
 import { logger } from './logger';
+import * as request from 'request-promise'
 
 function hash(str: string) {
     return crypto.createHash('md5').update(str).digest().toString('hex');
