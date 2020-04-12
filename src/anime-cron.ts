@@ -131,7 +131,6 @@ async function sync2DaysAnimes() {
 
 async function downloadAnimeListHTML(categoryNum: string, root: string, page: number) {
     let url = root + `/list/?${categoryNum}${page ? `-${page + 1}` : ''}.html`;
-    console
     return downloadHTML(url);
 }
 
