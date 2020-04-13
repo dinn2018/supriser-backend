@@ -90,6 +90,7 @@ async function sync2DaysAnimes() {
                     if (myAnime) {
                         anime.id = myAnime.id;
                         anime.isRecommended = myAnime.isRecommended;
+                        anime.hdPoster = myAnime.hdPoster;
                         anime.isForbidden = myAnime.isForbidden;
                         anime.score = myAnime.score;
                         anime.totalScore = myAnime.totalScore;

@@ -93,6 +93,7 @@ async function syncAll() {
                 let myAnime = await Anime.findOne({ where: { name: anime.name } })
                 if (myAnime) {
                     anime.id = myAnime.id;
+                    anime.hdPoster = myAnime.hdPoster;
                     anime.isRecommended = myAnime.isRecommended;
                     anime.isForbidden = myAnime.isForbidden;
                     anime.score = myAnime.score;
