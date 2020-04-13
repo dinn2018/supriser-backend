@@ -31,7 +31,6 @@ async function sync2DaysAnimes() {
             while (now - animeUpdateTime < 3 * 24 * 3600 * 1000) {
                 let data = await retry(downloadAnimeListHTML, categoryNum, root, currentPage);
                 let html = Iconv.decode(Buffer.from(data, 'binary'), 'gbk');
-                console.log(html)
                 let $ = cheerio.load(html);
                 //parse anime list
                 let hrefs: string[] = [];
