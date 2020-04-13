@@ -59,7 +59,6 @@ export default class Anime extends Model<Anime> {
         type: DataType.INTEGER({ length: 1 }),
     }) isRecommended: number
 
-
     @Column({
         type: DataType.INTEGER({ length: 1 }),
     }) isForbidden: number

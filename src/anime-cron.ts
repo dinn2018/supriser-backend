@@ -28,7 +28,7 @@ async function sync2DaysAnimes() {
         let root = 'http://www.kuyun9.com'
         let animeUpdateTime = now;
         try {
-            while (now - animeUpdateTime < 3 * 24 * 3600 * 1000) {
+            while (now - animeUpdateTime < 2 * 24 * 3600 * 1000) {
                 let data = await retry(downloadAnimeListHTML, categoryNum, root, currentPage);
                 let html = Iconv.decode(Buffer.from(data, 'binary'), 'gbk');
                 let $ = cheerio.load(html);
@@ -82,13 +82,19 @@ async function sync2DaysAnimes() {
                     });
                     logger.info(`download image ${anime.name}`);
                     anime.poster = await retry(downloadImage, anime.poster, anime.name)
+                    anime.hdPoster = anime.poster
                     logger.info('image downloaded');
                     logger.info(anime.name, new Date(anime.updateTime), categoryNum);
                     //upsert anime
                     let myAnime = await Anime.findOne({ where: { name: anime.name } })
                     if (myAnime) {
                         anime.id = myAnime.id;
-                        await Anime.update(anime, { where: { name: anime.name } })
+                        anime.isRecommended = myAnime.isRecommended;
+                        anime.isForbidden = myAnime.isForbidden;
+                        anime.score = myAnime.score;
+                        anime.totalScore = myAnime.totalScore;
+                        anime.scoreCount = myAnime.scoreCount;
+                        await Anime.update({ updateTime: anime.updateTime }, { where: { name: anime.name } })
                     } else {
                         anime = await Anime.create(anime);
                     }

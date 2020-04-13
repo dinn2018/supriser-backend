@@ -88,10 +88,17 @@ async function syncAll() {
                 anime.poster = await retry(downloadImage, anime.poster, anime.name)
                 logger.info('image downloaded');
                 //upsert anime
+                logger.info(anime.name, new Date(anime.updateTime), categoryNum);
+                //upsert anime
                 let myAnime = await Anime.findOne({ where: { name: anime.name } })
                 if (myAnime) {
                     anime.id = myAnime.id;
-                    await Anime.update(anime, { where: { name: anime.name } })
+                    anime.isRecommended = myAnime.isRecommended;
+                    anime.isForbidden = myAnime.isForbidden;
+                    anime.score = myAnime.score;
+                    anime.totalScore = myAnime.totalScore;
+                    anime.scoreCount = myAnime.scoreCount;
+                    await Anime.update({ updateTime: anime.updateTime }, { where: { name: anime.name } })
                 } else {
                     anime = await Anime.create(anime);
                 }
