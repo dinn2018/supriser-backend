@@ -20,17 +20,18 @@ later.setInterval(sync2DaysAnimes, sched);
 async function sync2DaysAnimes() {
     await mkdirp(path.join(__dirname, '../static/images'));
     await mkdirp(path.join(__dirname, '../static/cartoons'));
-    let categoryNums = ['vod-type-id-4', 'vod-type-id-16'];
+    let categoryNums = ['31', '39'];
     //parse anime list
     for (let categoryNum of categoryNums) {
         let currentPage = 0;
         let now = Date.now();
-        let root = 'http://www.kuyunzy.tv'
+        let root = 'http://www.kuyunzyw.vip/'
         let animeUpdateTime = now;
         try {
-            while (now - animeUpdateTime < 2 * 24 * 3600 * 1000) {
+            while (now - animeUpdateTime < 3 * 24 * 3600 * 1000) {
                 let data = await retry(downloadAnimeListHTML, categoryNum, root, currentPage);
-                let html = Iconv.decode(Buffer.from(data, 'binary'), 'utf-8');
+                let html = Iconv.decode(Buffer.from(data, 'binary'), 'gbk');
+                console.log(html)
                 let $ = cheerio.load(html);
                 //parse anime list
                 let hrefs: string[] = [];
@@ -40,7 +41,7 @@ async function sync2DaysAnimes() {
                 });
                 for (let href of hrefs) {
                     let data = await retry(downloadHTML, href);
-                    let $ = cheerio.load(Iconv.decode(Buffer.from(data, 'binary'), 'utf-8'));
+                    let $ = cheerio.load(Iconv.decode(Buffer.from(data, 'binary'), 'gbk'));
                     let anime: any = {};
                     let updateTimec = $('table tbody tr:nth-child(1) td:nth-child(2) table tbody tr:nth-child(7) td:nth-child(1) strong').text();
                     if (updateTimec == '更新时间：') {
@@ -129,7 +130,7 @@ async function sync2DaysAnimes() {
 }
 
 async function downloadAnimeListHTML(categoryNum: string, root: string, page: number) {
-    let url = root + `/?m=${categoryNum}${page ? `-pg-${page + 1}` : ''}.html`;
+    let url = root + `/list/?${categoryNum}${page ? `-${page + 1}` : ''}.html`;
     return downloadHTML(url);
 }
 

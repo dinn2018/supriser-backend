@@ -15,14 +15,14 @@ retry(syncAll);
 async function syncAll() {
     await mkdirp(path.join(__dirname, '../static/images'));
     await mkdirp(path.join(__dirname, '../static/cartoons'));
-    let categoryNums = ['vod-type-id-4', 'vod-type-id-16'];
+    let categoryNums = ['31', '39'];
     for (let categoryNum of categoryNums) {
         let currentPage = 0;
         //parse anime list
         let totalPages = 0;
-        let root = 'http://www.kuyunzy.tv'
+        let root = 'http://www.kuyunzyw.vip/'
         let data = await retry(downloadAnimeListHTML, categoryNum, root, currentPage);
-        let html = Iconv.decode(Buffer.from(data, 'binary'), 'utf-8');
+        let html = Iconv.decode(Buffer.from(data, 'binary'), 'gbk');
         let $ = cheerio.load(html);
         //parse total pages
         $('div.pages span').each((_, elem) => {
@@ -36,7 +36,7 @@ async function syncAll() {
         while (currentPage < totalPages) {
             if (currentPage != 0) {
                 let nextPageData = await retry(downloadAnimeListHTML, categoryNum, root, currentPage);
-                html = Iconv.decode(Buffer.from(nextPageData, 'binary'), 'utf-8');
+                html = Iconv.decode(Buffer.from(nextPageData, 'binary'), 'gbk');
                 $ = cheerio.load(html);
             }
             //parse anime list
