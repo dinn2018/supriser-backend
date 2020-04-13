@@ -25,7 +25,7 @@ async function sync2DaysAnimes() {
     for (let categoryNum of categoryNums) {
         let currentPage = 0;
         let now = Date.now();
-        let root = 'http://www.kuyunzyw.vip/'
+        let root = 'http://www.kuyun9.com/list'
         let animeUpdateTime = now;
         try {
             while (now - animeUpdateTime < 3 * 24 * 3600 * 1000) {

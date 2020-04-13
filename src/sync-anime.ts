@@ -20,7 +20,7 @@ async function syncAll() {
         let currentPage = 0;
         //parse anime list
         let totalPages = 0;
-        let root = 'http://www.kuyunzyw.vip/'
+        let root = 'http://www.kuyun9.com/list'
         let data = await retry(downloadAnimeListHTML, categoryNum, root, currentPage);
         let html = Iconv.decode(Buffer.from(data, 'binary'), 'gbk');
         let $ = cheerio.load(html);
