@@ -2,12 +2,12 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript'
 import Anime from './anime.model'
 
 @Table({
-    tableName: 'AnimeSeries',
+    tableName: 'Episode',
     timestamps: false,
     charset: 'utf8mb4',
     collate: 'utf8mb4_general_ci'
 })
-export default class AnimeSeries extends Model<AnimeSeries> {
+export default class Episode extends Model<Episode> {
 
     @Column({
         type: DataType.INTEGER({ length: 32 }),
@@ -17,20 +17,31 @@ export default class AnimeSeries extends Model<AnimeSeries> {
 
     @Column({
         type: DataType.STRING(200),
-        unique: { name: 'url', msg: 'url' }
+        // unique: { name: 'url', msg: 'url' }
     }) url: string
 
     @Column({
-        type: DataType.INTEGER({ length: 12 }),
-    }) num: number
+        type: DataType.STRING(200),
+        // unique: { name: 'downloadUrl', msg: 'downloadUrl' }
+    }) downloadUrl: string
 
     @Column({
-        type: DataType.INTEGER({ length: 1 }),
-    }) onlyVIP: number
+        type: DataType.STRING(200),
+        // unique: { name: 'webUrl', msg: 'webUrl' }
+    }) webUrl: string
+
+    @Column({
+        type: DataType.STRING({ length: 20 }),
+    }) num: string
 
     @Column({
         type: DataType.INTEGER({ length: 32 }),
         references: { model: Anime, key: 'id' }
     }) animeID: number
+
+    @Column({
+        type: DataType.DOUBLE,
+    }) updateTime: number
+
 
 }

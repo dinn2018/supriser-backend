@@ -5,7 +5,7 @@ import { sequelize } from '../sequelize-models';
 import { exec } from 'child_process';
 import { writeFile } from '../utils/utils'
 import Anime from '../sequelize-models/anime.model'
-import AnimeSeries from '../sequelize-models/animeseries.model'
+import AnimeSeries from '../sequelize-models/episode.model'
 import { logger } from '../utils/logger';
 sequelize.sync();
 

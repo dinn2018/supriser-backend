@@ -22,10 +22,9 @@ app.use(convert(bodyParser()))
     .use(convert(cors({
         origin: process.env.SUPRISER_CORS || "*"
     })))
-    .use(userMiddleware)
+    // .use(userMiddleware)
     .use(httpErrorMiddleware)
-    .use(registerRouter());
-
+    .use(registerRouter())
 
 const port = process.env.SUPRISER_PORT || 3000
 app.listen(port);

@@ -1,4 +1,6 @@
 import { Table, Column, Model, DataType } from 'sequelize-typescript'
+import AnimeSeries from './episode.model'
+import Episodes from './episode.model'
 
 @Table({
     tableName: 'Anime',
@@ -28,6 +30,10 @@ export default class Anime extends Model<Anime> {
     }) director: string
 
     @Column({
+        type: DataType.STRING(500),
+    }) actor: string
+
+    @Column({
         type: DataType.STRING(100),
     }) poster: string
 
@@ -48,7 +54,7 @@ export default class Anime extends Model<Anime> {
     }) lang: string
 
     @Column({
-        type: DataType.STRING(1000),
+        type: DataType.STRING(3000),
     }) description: string
 
     @Column({
@@ -64,14 +70,21 @@ export default class Anime extends Model<Anime> {
     }) isForbidden: number
 
     @Column({
-        type: DataType.INTEGER({ length: 64 }),
+        type: DataType.DECIMAL({ decimals: 32, precision: 0, }),
     }) totalScore: number
 
     @Column({
-        type: DataType.INTEGER({ length: 64 }),
+        type: DataType.DECIMAL({ decimals: 20, precision: 0, }),
     }) scoreCount: number
 
     @Column({
-        type: DataType.INTEGER({ length: 2 }),
+        type: DataType.DECIMAL({ decimals: 2, precision: 1, }),
     }) score: number
+
+    @Column({
+        type: DataType.DECIMAL({ decimals: 32, precision: 0, }),
+    }) hotness: number
+
+    episodeList: Array<AnimeSeries> = []
+
 }

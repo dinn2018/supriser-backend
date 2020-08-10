@@ -33,7 +33,7 @@
     "@types/redis": "^2.8.16",
     "bluebird": "^3.5.4",
     "cheerio": "^1.0.0-rc.3",
-    "iconv-lite": "^0.5.1",
+    "iconv-lite": "^0.5.2",
     "install": "^0.13.0",
     "koa": "^2.6.2",
     "koa-bodyparser": "^2.5.0",
@@ -51,6 +51,7 @@
     "request-promise": "^4.2.2",
     "sequelize": "^5.2.15",
     "sequelize-typescript": "^1.0.0-alpha.9",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "zlib": "^1.0.5"
   }
 }

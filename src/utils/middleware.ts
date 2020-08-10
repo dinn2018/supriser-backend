@@ -12,9 +12,9 @@ let httpErrorMiddleware = async (ctx: Koa.ParameterizedContext<any, {}>, next: (
 from: ${ctx.request.ip}
 request: ${ctx.request.url}
 `);
-
     } catch (err) {
         if (err instanceof HttpError) {
+            logger.error("HttpError: ", err)
             ctx.status = err.statusCode
             ctx.body = {
                 code: err.code,
@@ -22,27 +22,27 @@ request: ${ctx.request.url}
             }
         } else {
             ctx.status = HttpStatusCode.InternalError
+            ctx.body = { message: "system error" }
             logger.error("unexpected error: ", err)
         }
     }
 }
 
 let userMiddleware = async (ctx: Koa.ParameterizedContext<any, {}>, next: () => Promise<any>) => {
-    let token = ctx.cookies.get('token');
+    let token = ctx.request.query.token || ctx.request.body.token;
     if (!token) {
         token = crypto.randomBytes(16).toString('hex');
         console.log('randomBytes', token);
-        ctx.cookies.set('token', token, { httpOnly: true });
+        ctx.request.body.token = token;
+        ctx.request.query.token = token;
     }
-    ctx.request.body.token = token;
-    console.log('userMiddleware', ctx.request.body);
     await next()
     let user = await redisClient.getAsync(token);
     console.log('user', user)
     if (user) {
         user = JSON.parse(user);
         console.log('parse user', user);
-        await redisClient.expireAsync(token, 3600 * 24 * 60 * 2);
+        await redisClient.expireAsync(token, 3600 * 24 * 60 * 10);
         ctx.body = Object.assign(ctx.body, { user: { token, name: user.name, id: user.id } });
     }
 }

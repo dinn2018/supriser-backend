@@ -1,6 +1,6 @@
 import { Table, Column, Model, DataType } from 'sequelize-typescript'
 import User from './user.model'
-import AnimeSeries from './animeseries.model'
+import AnimeSeries from './episode.model'
 import CartoonSeries from './cartoonseries.model'
 
 @Table({

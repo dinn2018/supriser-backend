@@ -6,7 +6,7 @@ function registerRouter() {
     let routers: compose.Middleware<any>[] = [];
     glob.sync(resolve(__dirname, './', '**/*.js'))
         .filter(v => v.indexOf('index.js') == -1)
-        .every(r => {
+        .forEach(r => {
             let router = require(r);
             routers.push(router.routes())
             routers.push(router.allowedMethods())
