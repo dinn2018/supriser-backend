@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, Default, AllowNull } from 'sequelize-typescript'
 import AnimeSeries from './episode.model'
 import Episodes from './episode.model'
 
@@ -61,26 +61,38 @@ export default class Anime extends Model<Anime> {
         type: DataType.DOUBLE,
     }) updateTime: number
 
+    @Default(0)
+    @AllowNull(false)
     @Column({
         type: DataType.INTEGER({ length: 1 }),
     }) isRecommended: number
 
+    @Default(0)
+    @AllowNull(false)
     @Column({
         type: DataType.INTEGER({ length: 1 }),
     }) isForbidden: number
 
+    @Default(0)
+    @AllowNull(false)
     @Column({
         type: DataType.DECIMAL({ decimals: 32, precision: 0, }),
     }) totalScore: number
 
+    @Default(0)
+    @AllowNull(false)
     @Column({
         type: DataType.DECIMAL({ decimals: 20, precision: 0, }),
     }) scoreCount: number
 
+    @Default(0)
+    @AllowNull(false)
     @Column({
         type: DataType.DECIMAL({ decimals: 2, precision: 1, }),
     }) score: number
 
+    @Default(0)
+    @AllowNull(false)
     @Column({
         type: DataType.DECIMAL({ decimals: 32, precision: 0, }),
     }) hotness: number

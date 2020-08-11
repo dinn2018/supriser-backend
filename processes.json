@@ -8,11 +8,6 @@
             "script": "dist/anime-cron.js",
             "instances": "1",
             "exec_mode": "fork"
-        },
-        {
-            "script": "dist/sitemap-cron/sitemap-cron.js",
-            "instances": "1",
-            "exec_mode": "fork"
         }
     ]
 }

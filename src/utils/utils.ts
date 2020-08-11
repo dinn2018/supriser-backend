@@ -1,6 +1,6 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import * as crypto from 'crypto';
-import { logger } from './logger';
 import * as request from 'request-promise'
 import * as Iconv from 'iconv-lite';
 import * as XML2JSON from 'xml2json';
@@ -55,5 +55,19 @@ function getProtocal(src: string) {
     return protocal;
 }
 
+async function downloadImage(url: string, imageName: string): Promise<string> {
+    if (imageName.indexOf('/') != -1) {
+        imageName = imageName.replace(new RegExp(/\//g), ' ');
+    }
+    let dir = path.join(__dirname, '../../static/images', `/${imageName}`);
+    if (!fs.existsSync(dir)) {
+        request({
+            method: "GET",
+            uri: url,
+            json: false,
+        }).pipe(fs.createWriteStream(dir));
+    }
+    return `/static/images/${imageName}`;
+};
 
-export { writeFile, refactorParams, getProtocal, rssDataListFromURL }
+export { hash, writeFile, refactorParams, getProtocal, rssDataListFromURL, downloadImage }

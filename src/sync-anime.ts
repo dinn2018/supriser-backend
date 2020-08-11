@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
 import { sequelize } from './sequelize-models';
-import { rssDataListFromURL, refactorParams, getProtocal } from './utils/utils'
+import { rssDataListFromURL, refactorParams, getProtocal, downloadImage } from './utils/utils'
 import Anime from './sequelize-models/anime.model'
 import Episode from './sequelize-models/episode.model';
 
@@ -18,9 +18,7 @@ async function syncAll() {
         let href = `http://${host}?ac=videolist&t=${type}&pg=0&h=&ids=&wd=`;
         let data = await rssDataListFromURL(href);
         let pageCount = data['pagecount'];
-        console.log(pageCount * 20);
         for (let pg = 0; pg < pageCount; pg++) {
-            console.log('page', pg);
             let url = `http://${host}?ac=videolist&t=${type}&pg=${pg}&h=&ids=&wd=`;
             let data = await rssDataListFromURL(url);
             let videos = data['video'];
@@ -36,7 +34,6 @@ async function syncAll() {
                 anime.actor = refactorParams(video['actor']);
                 anime.director = refactorParams(video['director']);
                 anime.description = refactorParams(video['des']);
-                console.log(anime.toJSON());
                 let myAnime = await Anime.findOne({ where: { name: anime.name } })
                 if (myAnime) {
                     anime.id = myAnime.id;
@@ -81,20 +78,6 @@ async function syncAll() {
 }
 
 
-async function downloadImage(url: string, imageName: string): Promise<string> {
-    if (imageName.indexOf('/') != -1) {
-        imageName = imageName.replace(new RegExp(/\//g), ' ');
-    }
-    let dir = path.join(__dirname, '../static/images', `/${imageName}`);
-    if (!fs.existsSync(dir)) {
-        request({
-            method: "GET",
-            uri: url,
-            json: false,
-        }).pipe(fs.createWriteStream(dir));
-    }
-    return `/static/images/${imageName}`;
-};
 
 
 

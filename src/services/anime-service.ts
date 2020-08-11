@@ -218,7 +218,6 @@ export default class AnimeService {
         let animes = await Anime.findAll({
             where: {
                 region: region == "domestic" ? "大陆" : region == "japan" ? "日本" : region == "eura" ? "欧美" : "",
-                isForbidden: 0,
             },
             attributes: ['id', 'name', 'poster', 'status', 'score', 'updateTime'],
             limit: 10,
@@ -228,7 +227,7 @@ export default class AnimeService {
     }
 
     static async recommends() {
-        let whereOptions = { isRecommended: 1, isForbidden: 0, }
+        let whereOptions = { isRecommended: 1 }
         let animes = await Anime.findAll(
             {
                 limit: 5,
