@@ -178,7 +178,6 @@ export default class AnimeService {
                 e.updateTime = a.updateTime;
                 return e
             })
-            console.log(episodes);
             // let episodes = await Episode.findAll({
             //     where: { animeID },
             //     attributes: [
