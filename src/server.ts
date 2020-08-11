@@ -7,7 +7,7 @@ import * as mount from 'koa-mount';
 import * as path from 'path';
 import { registerRouter } from './router';
 import { logger } from './utils/logger'
-import { httpErrorMiddleware, userMiddleware } from './utils/middleware';
+import { httpErrorMiddleware } from './utils/middleware';
 const convert = require('koa-convert');
 
 sequelize.sync();

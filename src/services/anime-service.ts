@@ -1,7 +1,8 @@
 import { HttpError, ErrorCode, HttpStatusCode } from '../utils/httperror';
 import Anime from '../sequelize-models/anime.model'
 import Episode from '../sequelize-models/episode.model';
-import { Op, Sequelize } from "sequelize";
+import { Op, Sequelize, cast, col, } from "sequelize";
+
 export default class AnimeService {
     static async searchKeyword(keyword: string, pageNum: number, pageSize: number) {
         if (!pageSize || pageNum < 0 || pageSize < 0) {
@@ -163,11 +164,31 @@ export default class AnimeService {
     // }
 
     static async episodes(animeID: number, order: boolean) {
-        let episodes = await Episode.findAll({
-            where: { animeID },
-            order: [['num', `${order ? 'desc' : 'asc'}`]],
-        });
-        return episodes;
+        let es = await Episode.sequelize.query({ query: 'SELECT *,(num * 1.0) AS `cast_num` FROM `Episode` AS `Episode` WHERE `Episode`.`animeID` = ? ORDER BY `cast_num` ASC;', values: [animeID] })
+        if (es.length > 0) {
+            let episodes = (es[0] as any).map((v: any) => {
+                let a = v as any;
+                let e = new Episode()
+                e.num = a.num || '00';
+                e.id = a.id;
+                e.url = a.url;
+                e.downloadUrl = a.downloadUrl;
+                e.webUrl = a.webUrl;
+                e.animeID = a.animeID;
+                e.updateTime = a.updateTime;
+                return e
+            })
+            console.log(episodes);
+            // let episodes = await Episode.findAll({
+            //     where: { animeID },
+            //     attributes: [
+            //         ['num*1.0', 'cast_num'],
+            //     ],
+            //     order: [['cast_num', `${order ? 'desc' : 'asc'}`]],
+            // });
+            return episodes;
+        }
+        return [];
     }
 
     static async totalSeries(animeID: number, order: boolean) {

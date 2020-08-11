@@ -12,8 +12,8 @@ declare module 'redis' {
     }
 }
 
-const client = Redis.createClient({
-    host: '127.0.0.1',
-    port: 6379
-});
-export const redisClient = Promise.promisifyAll(client) as Redis.RedisClient; 
+// const client = Redis.createClient({
+//     host: '127.0.0.1',
+//     port: 6379
+// });
+// export const redisClient = Promise.promisifyAll(client) as Redis.RedisClient; 

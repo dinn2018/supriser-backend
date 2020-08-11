@@ -55,7 +55,7 @@ async function syncAll() {
                         let hostPath = splits[1];
                         let url = `${protocal}${hostPath}`;
                         let numPath = splits[0];
-                        let num = numPath.replace(/[^0-9]/ig, "")
+                        let num = numPath.replace(/[^(0-9|.)]/ig, "")
                         playUrls[num] = url;
                     }
                 }
@@ -66,6 +66,7 @@ async function syncAll() {
                     episode.url = playUrls[num];
                     episode.animeID = anime.id;
                     episode.num = num;
+                    console.log(num);
                     if (!e) {
                         episode.updateTime = anime.updateTime;
                         await Episode.create(episode.toJSON());

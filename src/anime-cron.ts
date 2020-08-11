@@ -9,7 +9,6 @@ import Anime from './sequelize-models/anime.model'
 import Episode from './sequelize-models/episode.model'
 
 sequelize.sync();
-
 sync2DaysAnimes();
 let sched = later.parse.text('every 5 minutes');
 later.setInterval(sync2DaysAnimes, sched);
@@ -18,15 +17,16 @@ async function sync2DaysAnimes() {
     await mkdirp(path.join(__dirname, '../static/images'));
     await mkdirp(path.join(__dirname, '../static/cartoons'));
     let videoTypes = [4, 16];
+    let hours = 36;
     let host = 'caiji.kuyun98.com/inc/s_ldg_kkm3u8.php';
     logger.info('sync start');
     try {
         for (let type of videoTypes) {
-            let href = `http://${host}?ac=videolist&t=${type}&pg=0&h=36&ids=&wd=`;
+            let href = `http://${host}?ac=videolist&t=${type}&pg=0&h=${hours}&ids=&wd=`;
             let data = await rssDataListFromURL(href);
             let pageCount = data['pagecount'];
             for (let pg = 0; pg < pageCount; pg++) {
-                let url = `http://${host}?ac=videolist&t=${type}&pg=${pg}&h=36&ids=&wd=`;
+                let url = `http://${host}?ac=videolist&t=${type}&pg=${pg}&h=${hours}&ids=&wd=`;
                 let data = await rssDataListFromURL(url);
                 let videos = data['video'];
                 if (!(videos instanceof Array)) {
@@ -64,7 +64,7 @@ async function sync2DaysAnimes() {
                             let hostPath = splits[1];
                             let url = `${protocal}${hostPath}`;
                             let numPath = splits[0];
-                            let num = numPath.replace(/[^0-9]/ig, "")
+                            let num = numPath.replace(/[^(0-9|.)]/ig, "")
                             playUrls[num] = url;
                         }
                     }
