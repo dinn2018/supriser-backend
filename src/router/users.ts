@@ -1,8 +1,8 @@
-// import * as Router from 'koa-router';
+import * as Router from 'koa-router';
 // import Validator from '../utils/validator'
 // import UserService from '../services/user-service';
 
-// let router = new Router();
+let router = new Router();
 
 // router.post('/users/register', async (ctx) => {
 //     console.log('register', ctx.request.body)
@@ -34,4 +34,4 @@
 //     ctx.body = {}
 // })
 
-// export = router;
+export = router;
