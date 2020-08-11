@@ -17,26 +17,25 @@ later.setInterval(sync2DaysAnimes, sched);
 async function sync2DaysAnimes() {
     await mkdirp(path.join(__dirname, '../static/images'));
     await mkdirp(path.join(__dirname, '../static/cartoons'));
-    let categoryNums = ['4', '16'];
     let videoTypes = [4, 16];
     let host = 'caiji.kuyun98.com/inc/s_ldg_kkm3u8.php';
-    let now = Date.now();
+    logger.info('sync start');
     try {
         for (let type of videoTypes) {
-            let href = `http://${host}?ac=videolist&t=${type}&pg=0&h=&ids=&wd=`;
+            let href = `http://${host}?ac=videolist&t=${type}&pg=0&h=36&ids=&wd=`;
             let data = await rssDataListFromURL(href);
             let pageCount = data['pagecount'];
-            let animeUpdateTime = now;
             for (let pg = 0; pg < pageCount; pg++) {
-                if (now - animeUpdateTime >= 2 * 24 * 3600 * 1000) break;
-                let url = `http://${host}?ac=videolist&t=${type}&pg=${pg}&h=&ids=&wd=`;
+                let url = `http://${host}?ac=videolist&t=${type}&pg=${pg}&h=36&ids=&wd=`;
                 let data = await rssDataListFromURL(url);
                 let videos = data['video'];
+                if (!(videos instanceof Array)) {
+                    videos = [videos];
+                }
+                console.log('videos', Array.from(videos));
                 for (let video of videos) {
                     let anime = new Anime();
                     anime.updateTime = Date.parse(video['last']);
-                    animeUpdateTime = anime.updateTime;
-                    if (now - animeUpdateTime >= 2 * 24 * 3600 * 1000) break;
                     anime.name = video['name'];
                     anime.poster = video['pic'];
                     anime.lang = refactorParams(video['lang']);
@@ -46,6 +45,7 @@ async function sync2DaysAnimes() {
                     anime.actor = refactorParams(video['actor']);
                     anime.director = refactorParams(video['director']);
                     anime.description = refactorParams(video['des']);
+                    logger.info(`cron to: ${type} ${pg}/${pageCount}`, anime.toJSON());
                     let myAnime = await Anime.findOne({ where: { name: anime.name } })
                     if (myAnime) {
                         anime.id = myAnime.id;

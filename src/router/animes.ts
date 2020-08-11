@@ -71,13 +71,6 @@ router.get("/api/animes/:animeID/series", async (ctx) => {
     };
 })
 
-router.get("/animes/categories", async (ctx) => {
-    let data = await AnimeService.animeCategories();
-    ctx.body = {
-        data
-    };
-});
-
 router.post("/api/animes", async (ctx) => {
     let pageSize = ctx.request.query.pageSize;
     Validator.validateParameter(pageSize, 'pageSize')
@@ -87,6 +80,13 @@ router.post("/api/animes", async (ctx) => {
     let postYears = ctx.request.body.postYears;
     let regions = ctx.request.body.regions;
     let data = await AnimeService.all(parseInt(pageSize), parseInt(pageNum), keyword, postYears, regions);
+    ctx.body = {
+        data
+    };
+});
+
+router.get("/animes/categories", async (ctx) => {
+    let data = await AnimeService.animeCategories();
     ctx.body = {
         data
     };

@@ -1,7 +1,7 @@
 import { HttpError, ErrorCode, HttpStatusCode } from '../utils/httperror';
 import Anime from '../sequelize-models/anime.model'
 import Episode from '../sequelize-models/episode.model';
-import { Op, Sequelize, } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 export default class AnimeService {
     static async searchKeyword(keyword: string, pageNum: number, pageSize: number) {
         if (!pageSize || pageNum < 0 || pageSize < 0) {
@@ -81,7 +81,7 @@ export default class AnimeService {
         if (!pageSize || pageNum < 0 || pageSize < 0) {
             throw new HttpError('invalid params', ErrorCode.Bad_Parameter, HttpStatusCode.BadRequest);
         }
-        let whereOptions: any = { isForbidden: 0, }
+        let whereOptions: any = {}
         if (postYears.length == 1) {
             whereOptions.postYear = postYears[0];
         } else if (postYears.length > 1) {
@@ -96,7 +96,7 @@ export default class AnimeService {
                 [Op.notIn]: regions,
             }
         }
-        if (keyword && keyword != "") {
+        if (keyword) {
             whereOptions.name = { [Op.like]: `%${keyword}%` }
         }
         let animes = await Anime.findAll(
@@ -114,7 +114,7 @@ export default class AnimeService {
         if (!pageSize || pageNum < 0 || pageSize < 0) {
             throw new HttpError('invalid params', ErrorCode.Bad_Parameter, HttpStatusCode.BadRequest);
         }
-        let whereOptions: any = { isForbidden: 0, }
+        let whereOptions: any = {}
         if (postYears.length == 1) {
             whereOptions.postYear = postYears[0];
         } else if (postYears.length > 1) {
@@ -122,6 +122,7 @@ export default class AnimeService {
                 [Op.notIn]: postYears,
             }
         }
+
         if (regions.length == 1) {
             whereOptions.region = regions[0];
         } else if (regions.length > 1) {
@@ -132,6 +133,7 @@ export default class AnimeService {
         if (keyword && keyword != "") {
             whereOptions.name = { [Op.like]: `%${keyword}%` }
         }
+
         let animes = await Anime.findAll(
             {
                 limit: pageSize,
@@ -185,7 +187,7 @@ export default class AnimeService {
             attributes: [
                 [Sequelize.fn('DISTINCT', Sequelize.col('postYear')), 'postYear'],
             ],
-            limit: 8,
+            limit: 6,
             order: [['postYear', 'desc']],
         });
         // let regions = await Anime.findAll({
@@ -227,14 +229,14 @@ export default class AnimeService {
     }
 
     static async recommends() {
-        let whereOptions = { isRecommended: 1 }
+        let whereOptions = {}//{ isRecommended: 1 }
         let animes = await Anime.findAll(
             {
                 limit: 5,
                 offset: 0,
                 where: whereOptions,
                 attributes: ['id', 'name', 'poster', 'hdPoster', 'status', 'score', 'updateTime'],
-                order: [['updateTime', 'desc',]],
+                order: [['hotness', 'desc']],
             }
         )
         return animes;

@@ -1,11 +1,10 @@
-import * as request from 'request-promise'
-import * as fs from 'fs';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
 import { sequelize } from './sequelize-models';
 import { rssDataListFromURL, refactorParams, getProtocal, downloadImage } from './utils/utils'
 import Anime from './sequelize-models/anime.model'
 import Episode from './sequelize-models/episode.model';
+import { logger } from './utils/logger';
 
 sequelize.sync();
 syncAll();
@@ -22,6 +21,9 @@ async function syncAll() {
             let url = `http://${host}?ac=videolist&t=${type}&pg=${pg}&h=&ids=&wd=`;
             let data = await rssDataListFromURL(url);
             let videos = data['video'];
+            if (!(videos instanceof Array)) {
+                videos = [videos];
+            }
             for (let video of videos) {
                 let anime = new Anime();
                 anime.updateTime = Date.parse(video['last']);
@@ -34,6 +36,7 @@ async function syncAll() {
                 anime.actor = refactorParams(video['actor']);
                 anime.director = refactorParams(video['director']);
                 anime.description = refactorParams(video['des']);
+                logger.info('sync: ', anime.toJSON());
                 let myAnime = await Anime.findOne({ where: { name: anime.name } })
                 if (myAnime) {
                     anime.id = myAnime.id;
