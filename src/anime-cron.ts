@@ -10,7 +10,7 @@ import Episode from './sequelize-models/episode.model'
 
 sequelize.sync();
 sync2DaysAnimes();
-let sched = later.parse.text('every 5 minutes');
+let sched = later.parse.text('every 20 minutes');
 later.setInterval(sync2DaysAnimes, sched);
 
 async function sync2DaysAnimes() {
