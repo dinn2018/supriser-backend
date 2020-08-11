@@ -10,12 +10,12 @@ import User from './user.model';
 let sequelize: Sequelize;
 if (!process.env.NODE_ENV || process.env.NODE_ENV == "dev") {
     sequelize = new Sequelize({
-        database: 'supriser',
+        database: 'EXAnime',
         dialect: 'mysql',
         host: 'localhost',
         username: 'root',
         password: '123456qwe',
-        models: [Anime, Episode, Cartoon, CartoonNum, CartoonSeries, User, Comment]
+        models: [Anime, Episode]
     });
 } else {
     sequelize = new Sequelize({
@@ -24,7 +24,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV == "dev") {
         host: process.env.DBHOST,
         username: process.env.DBUSER,
         password: process.env.DBPASS,
-        models: [Anime, Episode, Cartoon, CartoonNum, CartoonSeries, User, Comment]
+        models: [Anime, Episode]
     });
 }
 
