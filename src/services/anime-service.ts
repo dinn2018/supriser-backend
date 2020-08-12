@@ -225,7 +225,7 @@ export default class AnimeService {
             where: {
                 [Op.and]: [
                     Sequelize.where(Sequelize.fn('WEEKDAY', Sequelize.fn('FROM_UNIXTIME', Sequelize.literal('updateTime/1000'), '%Y-%m-%d')), { [Op.in]: [weekday] }),
-                    // { updateTime: { [Op.gte]: Date.now() - 30 * 24 * 3600 * 1000 }, isForbidden: 0, },
+                    { updateTime: { [Op.gte]: Date.now() - 30 * 24 * 3600 * 1000 } },
                 ]
             },
             limit: pageSize,
