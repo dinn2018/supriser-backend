@@ -1,6 +1,5 @@
 import { Table, Column, Model, DataType, Default, AllowNull } from 'sequelize-typescript'
-import AnimeSeries from './episode.model'
-import Episodes from './episode.model'
+import Episode from './episode.model'
 
 @Table({
     tableName: 'Anime',
@@ -97,6 +96,6 @@ export default class Anime extends Model<Anime> {
         type: DataType.DECIMAL({ decimals: 32, precision: 0, }),
     }) hotness: number
 
-    episodeList: Array<AnimeSeries> = []
+    episodeList: Array<Episode> = []
 
 }

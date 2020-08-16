@@ -1,7 +1,7 @@
 import { HttpError, ErrorCode, HttpStatusCode } from '../utils/httperror';
 import Anime from '../sequelize-models/anime.model'
 import Episode from '../sequelize-models/episode.model';
-import { Op, Sequelize, cast, col, } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 
 export default class AnimeService {
     static async searchKeyword(keyword: string, pageNum: number, pageSize: number) {
@@ -20,14 +20,6 @@ export default class AnimeService {
                 order: [['hotness', 'desc',]],
             }
         )
-        // for (let anime of animes) {
-        //     let series = await AnimeSeries.findAll({
-        //         where: { animeId: anime.id },
-        //         order: [['num', 'asc']],
-        //     })
-        //     anime.setDataValue("seriesList", series)
-        // }
-        // console.log(animes)
         return animes;
     }
 
